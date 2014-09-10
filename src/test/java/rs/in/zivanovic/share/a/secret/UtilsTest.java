@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, marko
+ * Copyright (c) 2014, Marko Živanović
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
