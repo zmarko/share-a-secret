@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Entry point into application.
  *
  * @author marko
  */
@@ -39,61 +40,71 @@ public class Main {
 
     public static void main(String[] args) {
         if (args.length == 1 && args[0].toLowerCase().equals("-d")) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-                List<SecretShare> shares = new ArrayList<>();
-                System.out.println("Enter a number of shares, one per line, that you'd like to try to join.");
-                System.out.println("Finish with empty line.");
-                while (true) {
-                    String line = br.readLine();
-                    if (line != null && !line.isEmpty()) {
-                        try {
-                            int s = line.indexOf("U1");
-                            if (s >= 0) {
-                                SecretShare share = Utils.decodeFromBinary(Base64.decode(line.substring(s)));
-                                shares.add(share);
-                            } else {
-                                System.err.println("Invalid data");
-                            }
-                        } catch (IllegalArgumentException ex) {
-                            System.err.println(ex.getMessage());
-                        }
-                    } else {
-                        break;
-                    }
-                }
-                String secret = ShamirSecretSharing.joinToUtf8String(shares);
-                System.out.println("Secret = " + secret);
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
+            decodeFromStdin();
         } else if (args.length == 3 && args[0].toLowerCase().equals("-e")) {
-            Integer total = Integer.valueOf(args[1]);
-            Integer threshold = Integer.valueOf(args[2]);
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-                String line = br.readLine();
-                List<SecretShare> shares = ShamirSecretSharing.split(line, total, threshold);
-                for (SecretShare share : shares) {
-                    System.out.println(Base64.encodeBytes(Utils.encodeToBinary(share)));
-                    System.out.println();
-                }
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
+            encodeToStdout(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
         } else {
-            System.err.println("Share-A-Secret 1.0.0-SNAPSHOT");
-            System.err.println("This application uses Shamir's secret sharing algorithm to split the secret data into");
-            System.err.println("a desired number of shares. In order to retrieve the secret data, at least a required");
-            System.err.println("minimum number of shares must be present.");
-            System.err.println();
-            System.err.println("All data is read from standard input and sent to standard output.");
-            System.err.println();
-            System.err.println("To encode: java -jar sas.jar -e <n> <t>");
-            System.err.println("To decode: java -jar sas.jar -d");
-            System.err.println();
-            System.err.println(" n - total number of shares to generate");
-            System.err.println(" t - minimum number of shares required to retrieve the secret.");
-            System.err.println();
+            showHelp();
         }
+    }
+
+    private static void decodeFromStdin() {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            List<SecretShare> shares = new ArrayList<>();
+            System.out.println("Enter a number of shares, one per line, that you'd like to try to join.");
+            System.out.println("Finish with empty line.");
+            while (true) {
+                String line = br.readLine();
+                if (line != null && !line.isEmpty()) {
+                    try {
+                        int s = line.indexOf("U1");
+                        if (s >= 0) {
+                            SecretShare share = Utils.decodeFromBinary(Base64.decode(line.substring(s)));
+                            shares.add(share);
+                        } else {
+                            System.err.println("Invalid data");
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        System.err.println(ex.getMessage());
+                    }
+                } else {
+                    break;
+                }
+            }
+            String secret = ShamirSecretSharing.joinToUtf8String(shares);
+            System.out.println("Secret = " + secret);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    private static void encodeToStdout(int totalShares, int thresholdShares) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            String line = br.readLine();
+            List<SecretShare> shares = ShamirSecretSharing.split(line, totalShares, thresholdShares);
+            for (SecretShare share : shares) {
+                System.out.println(Base64.encodeBytes(Utils.encodeToBinary(share)));
+                System.out.println();
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    private static void showHelp() {
+        System.err.println("Share-A-Secret 1.0.0-SNAPSHOT");
+        System.err.println("This application uses Shamir's secret sharing algorithm to split the secret data into");
+        System.err.println("a desired number of shares. In order to retrieve the secret data, at least a required");
+        System.err.println("minimum number of shares must be present.");
+        System.err.println();
+        System.err.println("All data is read from standard input and sent to standard output.");
+        System.err.println();
+        System.err.println("To encode: java -jar sas.jar -e <n> <t>");
+        System.err.println("To decode: java -jar sas.jar -d");
+        System.err.println();
+        System.err.println(" n - total number of shares to generate");
+        System.err.println(" t - minimum number of shares required to retrieve the secret.");
+        System.err.println();
     }
 
 }

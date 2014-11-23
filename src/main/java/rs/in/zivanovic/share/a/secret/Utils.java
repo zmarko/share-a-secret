@@ -70,10 +70,10 @@ public final class Utils {
         return secret.nextProbablePrime();
     }
 
-    public static BigInteger getRandomPrimeGreaterThan(BigInteger secret) {
+    public static BigInteger getRandomPrimeGreaterThan(BigInteger prime) {
         BigInteger res = BigInteger.ZERO;
-        while (res.compareTo(secret) <= 0) {
-            res = BigInteger.probablePrime(secret.bitLength(), RANDOM);
+        while (res.compareTo(prime) <= 0) {
+            res = BigInteger.probablePrime(prime.bitLength(), RANDOM);
         }
         return res;
     }

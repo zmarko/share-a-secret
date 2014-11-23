@@ -5,6 +5,34 @@
     <artifactId>share-a-secret</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
+    <name>share-a-secret</name>
+    <licenses>
+        <license>
+            <name>BSD 2-Clause</name>
+            <url>http://opensource.org/licenses/BSD-2-Clause</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>marko</id>
+            <name>Marko Zivanovic</name>
+            <email>marko@zivanovic.in.rs</email>
+            <url>http://marko.zivanovic.in.rs</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -13,11 +41,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-    </properties>
+
     <build>
         <plugins> 
             <plugin>
@@ -40,14 +64,6 @@
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                     </libs>
-                    <assembly>
-                        <inclusions>
-                            <!--                            <inclusion>
-                                <groupId>commons-codec</groupId>
-                                <artifactId>commons-codec</artifactId>
-                            </inclusion>-->
-                        </inclusions>
-                    </assembly>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -59,8 +75,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
                     <archive>
                         <manifest>
