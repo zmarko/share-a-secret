@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Marko Živanović
+ * Copyright (c) 2014, Marko Zivanovic
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import rs.in.zivanovic.sss.SasUtils;
+import rs.in.zivanovic.sss.SecretShare;
+import rs.in.zivanovic.sss.ShamirSecretSharing;
 
 /**
  * Entry point into application.
@@ -59,7 +64,7 @@ public class Main {
                     try {
                         int s = line.indexOf("U1");
                         if (s >= 0) {
-                            SecretShare share = Utils.decodeFromBinary(Base64.decode(line.substring(s)));
+                            SecretShare share = SasUtils.decodeFromBinary(Base64.decode(line.substring(s)));
                             shares.add(share);
                         } else {
                             System.err.println("Invalid data");
@@ -83,7 +88,7 @@ public class Main {
             String line = br.readLine();
             List<SecretShare> shares = ShamirSecretSharing.split(line, totalShares, thresholdShares);
             for (SecretShare share : shares) {
-                System.out.println(Base64.encodeBytes(Utils.encodeToBinary(share)));
+                System.out.println(Base64.encodeBytes(SasUtils.encodeToBinary(share)));
                 System.out.println();
             }
         } catch (IOException ex) {
@@ -92,7 +97,14 @@ public class Main {
     }
 
     private static void showHelp() {
-        System.err.println("Share-A-Secret 1.0.0-SNAPSHOT");
+        String version = "Share-A-Secret <unknown version>";
+        try {
+            ResourceBundle rb = ResourceBundle.getBundle("version");
+            version = String.format("%s %s", rb.getString("app.name"), rb.getString("app.version"));
+        } catch (MissingResourceException unused) {
+            // use default value
+        }
+        System.err.println(version);
         System.err.println("This application uses Shamir's secret sharing algorithm to split the secret data into");
         System.err.println("a desired number of shares. In order to retrieve the secret data, at least a required");
         System.err.println("minimum number of shares must be present.");
