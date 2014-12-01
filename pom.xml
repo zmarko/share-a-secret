@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>rs.in.zivanovic</groupId>
     <artifactId>share-a-secret</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     
     <name>share-a-secret</name>
@@ -103,5 +103,9 @@
             </resource>        
         </resources>    
     </build>
+    
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
     
 </project>
